@@ -1,0 +1,54 @@
+// index.js
+const express = require('express');
+const bodyParser = require('body-parser');
+const axios = require('axios');
+require('dotenv').config();
+
+const app = express();
+app.use(bodyParser.json());
+
+const NOTION_API_KEY = process.env.NOTION_API_KEY;
+const DATABASE_ID = '1de2cf81cbcb8080803fdb61116a3aa3';
+
+app.post('/api/add-event', async (req, res) => {
+    try {
+        const {
+            title, date, time, borough, location, mapsLink,
+            soundVibe, perks, weatherSuitable, crowdLevel, notes
+        } = req.body;
+
+        const response = await axios.post(
+            'https://api.notion.com/v1/pages',
+            {
+                parent: { database_id: DATABASE_ID },
+                properties: {
+                    "Title": { title: [{ text: { content: title } }] },
+                    "Date": { date: { start: date } },
+                    "Time": { rich_text: [{ text: { content: time } }] },
+                    "Borough": { select: { name: borough } },
+                    "Location": { rich_text: [{ text: { content: location } }] },
+                    "Google Maps": { url: mapsLink },
+                    "Sound Vibe": { rich_text: [{ text: { content: soundVibe } }] },
+                    "Perks": { rich_text: [{ text: { content: perks } }] },
+                    "Weather Suitable": { select: { name: weatherSuitable } },
+                    "Expected Crowd Level": { select: { name: crowdLevel } },
+                    "Notes": { rich_text: [{ text: { content: notes } }] },
+                },
+            },
+            {
+                headers: {
+                    'Authorization': `Bearer ${NOTION_API_KEY}`,
+                    'Notion-Version': '2022-06-28',
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
+
+        res.status(200).send({ message: 'Event added!', data: response.data });
+    } catch (err) {
+        res.status(500).send({ error: err.message });
+    }
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Running on port ${PORT}`));
