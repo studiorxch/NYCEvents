@@ -22,7 +22,7 @@ app.post('/api/add-event', async (req, res) => {
             {
                 parent: { database_id: DATABASE_ID },
                 properties: {
-                    "Title": { title: [{ text: { content: title } }] },
+                    "Event Name": { title: [{ text: { content: title } }] },
                     "Date": { date: { start: date } },
                     "Time": { rich_text: [{ text: { content: time } }] },
                     "Borough": { select: { name: borough } },
