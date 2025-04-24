@@ -31,7 +31,7 @@ app.post('/api/add-event', async (req, res) => {
                     "Borough": { select: { name: borough } },
                     "Location": { rich_text: [{ text: { content: location } }] },
                     "Google Maps": { url: mapsLink },
-                    "Sound Vibe": { rich_text: [{ text: { content: soundVibe } }] },
+                    "Sound Vibe": { multi_select: soundVibe.split(',').map(item => ({ name: item.trim() })) },
                     "Perks": { rich_text: [{ text: { content: perks } }] },
                     "Weather Suitable": { select: { name: weatherSuitable } },
                     "Expected Crowd Level": { select: { name: crowdLevel } },
