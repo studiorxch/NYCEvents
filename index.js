@@ -14,8 +14,10 @@ app.post('/api/add-event', async (req, res) => {
     try {
         const {
             title, date, time, borough, location, mapsLink,
-            soundVibe, perks, weatherSuitable, crowdLevel, notes
+            soundVibe, perks, weatherSuitable, crowdLevel, notes, eventType
         } = req.body;
+
+        const eventTypeValue = eventType || "Unknown"; // ✅ proper placement
 
         const response = await axios.post(
             'https://api.notion.com/v1/pages',
@@ -25,6 +27,7 @@ app.post('/api/add-event', async (req, res) => {
                     "Event Name": { title: [{ text: { content: title } }] },
                     "Date": { date: { start: date } },
                     "Time": { rich_text: [{ text: { content: time } }] },
+                    "Event Type": { select: { name: eventTypeValue } },
                     "Borough": { select: { name: borough } },
                     "Location": { rich_text: [{ text: { content: location } }] },
                     "Google Maps": { url: mapsLink },
@@ -46,8 +49,16 @@ app.post('/api/add-event', async (req, res) => {
 
         res.status(200).send({ message: 'Event added!', data: response.data });
     } catch (err) {
-        res.status(500).send({ error: err.message });
+        console.error("Notion error:", {
+            status: err.response?.status,
+            data: err.response?.data,
+            message: err.message,
+        });
+        res.status(err.response?.status || 500).send({
+            error: err.response?.data || err.message,
+        });
     }
+
 });
 
 const PORT = process.env.PORT || 3000;
