@@ -10,6 +10,11 @@ app.use(bodyParser.json());
 const NOTION_API_KEY = process.env.NOTION_API_KEY;
 const DATABASE_ID = '1de2cf81cbcb8080803fdb61116a3aa3';
 
+app.get('/', (req, res) => {
+    res.send('NYC Events API is live. Use POST /api/add-event to submit.');
+});
+
+
 app.post('/api/add-event', async (req, res) => {
     try {
         const {
