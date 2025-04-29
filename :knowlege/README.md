@@ -1,6 +1,7 @@
 # NYCEvents Backend
 
-**NYCEvents** is a Node.js + Express API that logs free public NYC events directly into your Notion database. It powers the RadarGPT/StudioRich event workflow by handling extended metadata like sound vibes, AI summaries, and field-recording notes.
+**NYCEvents** is a Node.js + Express API that logs free public NYC events directly into your Notion database.  
+It powers the RadarGPT/StudioRich event workflow by handling extended metadata like sound vibes, AI summaries, and field-recording notes.
 
 ---
 
@@ -15,7 +16,7 @@
   - Event Type, Event Format
   - Platform Link, Tags
   - AI Summary (public), studioNotes (internal)
-  - Status: Going / Maybe / Missed
+  - Status (multi-select): Interested (expandable later)
 
 ---
 
@@ -23,7 +24,7 @@
 
 - **Node.js** v16 or higher
 - A **Notion integration** and **API key**
-- A Notion database with ID: `1de2cf81cbcb8080803fdb61116a3aa3`
+- A Notion database with ID: `1e42cf81cbcb802aa703f5a1506f1a78`
 
 ---
 
@@ -85,7 +86,7 @@ Visit `http://localhost:3000` for a health check.
     "tags": "Lo-fi Friendly, Cultural",
     "aiSummary": "Short public-facing blurb",
     "studioNotes": "Internal mic placement tips",
-    "status": "Maybe"
+    "status": "Interested"
   }
   ```
 - **Success:** HTTP 200 + JSON response with Notion API data
@@ -111,3 +112,4 @@ Once deployed, your live API URL will be in the Vercel dashboard.
 
 Licensed under MIT. Feel free to adapt for your own events workflows!
 
+---

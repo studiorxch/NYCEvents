@@ -8,10 +8,10 @@ const app = express();
 app.use(bodyParser.json());
 
 const NOTION_API_KEY = process.env.NOTION_API_KEY;
-const DATABASE_ID = '1de2cf81cbcb8080803fdb61116a3aa3';
+const DATABASE_ID = '1e42cf81cbcb802aa703f5a1506f1a78';
 
-app.get('/', (req, res) => {
-    res.send('NYC Events API is live. Use POST /api/add-event to submit.');
+app.get('/', (_req, res) => {
+    res.send('NYC Events API is live. POST /api/add-event to create.');
 });
 
 app.post('/api/add-event', async (req, res) => {
@@ -24,58 +24,53 @@ app.post('/api/add-event', async (req, res) => {
             location,
             mapsLink,
             soundVibe,
+            cost,
+            eventType,
+            platformLink,
+            source,
             perks,
             weatherSuitable,
             crowdLevel,
-            eventType,
-            eventFormat,
-            platformLink,
-            tags,
+            description,
+            notes,
+            tag,
             aiSummary,
             studioNotes,
             status
         } = req.body;
 
-        // Fallback defaults
-        const eventTypeValue = eventType || 'Unknown';
-        const eventFormatValue = eventFormat || 'In-Person';
-        const statusValue = status || 'Maybe';
+        // Defaults
+        const statusValue = status || 'Not started';
+        const soundOptions = (soundVibe || '').split(',').map(v => ({ name: v.trim() }));
+        const costOptions = (cost || '').split(',').map(c => ({ name: c.trim() }));
+        const tagText = tag || '';
 
-        // Build the Notion properties payload
         const properties = {
             'Event Name': { title: [{ text: { content: title } }] },
             'Date': { date: { start: date } },
             'Time': { rich_text: [{ text: { content: time } }] },
-            'Event Type': { select: { name: eventTypeValue } },
-            'Event Format': { select: { name: eventFormatValue } },
+            'Event Type': { select: { name: eventType } },
             'Borough': { select: { name: borough } },
             'Location': { rich_text: [{ text: { content: location } }] },
             'Google Maps': { url: mapsLink },
-            'Sound Vibe': {
-                multi_select: (soundVibe || '')
-                    .split(',')
-                    .map(v => ({ name: v.trim() }))
-            },
+            'Sound Vibe': { multi_select: soundOptions },
+            'Cost': { multi_select: costOptions },
+            'Platform Link': { url: platformLink },
+            'Source': { url: source },
             'Perks': { rich_text: [{ text: { content: perks } }] },
             'Weather Suitable': { select: { name: weatherSuitable } },
             'Expected Crowd Level': { select: { name: crowdLevel } },
-            'Platform Link': { url: platformLink },
-            'Tags': {
-                multi_select: (tags || '')
-                    .split(',')
-                    .map(t => ({ name: t.trim() }))
-            },
-            'AI Summary': { rich_text: [{ text: { content: aiSummary } }] },
+            'Description': { rich_text: [{ text: { content: description } }] },
+            'Notes': { rich_text: [{ text: { content: notes } }] },
+            'Tag': { rich_text: [{ text: { content: tagText } }] },
+            'AI summary': { rich_text: [{ text: { content: aiSummary } }] },
             'studioNotes': { rich_text: [{ text: { content: studioNotes } }] },
-            'Status': { select: { name: statusValue } },
+            'Status': { status: { name: statusValue } },
         };
 
-        const notionResponse = await axios.post(
+        const response = await axios.post(
             'https://api.notion.com/v1/pages',
-            {
-                parent: { database_id: DATABASE_ID },
-                properties
-            },
+            { parent: { database_id: DATABASE_ID }, properties },
             {
                 headers: {
                     'Authorization': `Bearer ${NOTION_API_KEY}`,
@@ -85,13 +80,9 @@ app.post('/api/add-event', async (req, res) => {
             }
         );
 
-        res.status(200).json({ message: 'Event added!', data: notionResponse.data });
+        res.status(200).json({ message: 'Event added!', data: response.data });
     } catch (err) {
-        console.error('Notion error:', {
-            status: err.response?.status,
-            data: err.response?.data,
-            message: err.message,
-        });
+        console.error('Notion error:', err.response?.data || err.message);
         res.status(err.response?.status || 500).json({
             error: err.response?.data || err.message
         });
