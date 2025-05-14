@@ -65,7 +65,8 @@ app.post('/api/add-event', async (req, res) => {
             'Tag': { rich_text: [{ text: { content: tagText } }] },
             'AI summary': { rich_text: [{ text: { content: aiSummary } }] },
             'studioNotes': { rich_text: [{ text: { content: studioNotes } }] },
-            'Status': { status: { name: statusValue } },
+            'Status': { select: { name: statusValue } },
+
         };
 
         const response = await axios.post(

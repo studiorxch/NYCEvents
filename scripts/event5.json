@@ -1,0 +1,23 @@
+{
+  "title": "AAPI Heritage Storytime @ Brooklyn Children's Museum",
+  "date": "2025-05-15",
+  "time": "3:00 PM",
+  "borough": "Brooklyn",
+  "location": "Brooklyn Children's Museum, 145 Brooklyn Ave",
+  "mapsLink": "https://maps.google.com/?q=Brooklyn+Children's+Museum",
+  "soundVibe": "Children\u2019s voices, Storytelling, Cultural music",
+  "cost": "Free",
+  "eventType": "Cultural Event",
+  "eventFormat": "In-Person",
+  "platformLink": "https://example.com",
+  "source": "https://www.brooklynkids.org",
+  "perks": "Family-friendly, cultural programming, interactive",
+  "weatherSuitable": "Indoor only",
+  "crowdLevel": "Medium",
+  "description": "Celebrate AAPI Heritage Month with immersive storytime sessions and hands-on cultural activities.",
+  "tags": "Educational, Cultural, Family-Friendly",
+  "aiSummary": "AAPI storytelling and music at Brooklyn Children\u2019s Museum. A vibrant indoor space with lively youth interaction.",
+  "studioNotes": "Use discreet lavalier or stereo mics; capture between sessions for clean transitions and voices.",
+  "notes": "",
+  "status": "Not started"
+}
